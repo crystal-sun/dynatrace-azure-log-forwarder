@@ -100,7 +100,7 @@
         }
     },
     "variables": {
-        "dtHost": "[replace(parameters('targetUrl'),'https://','')]",
+        "dtHost": "[replace(parameters('targetUrl'),'://','')]",
         "registryUser": "[if(contains(variables('dtHost'), '/e/'), last(split(variables('dtHost'), '/e/')), first(split(variables('dtHost'),'.')))]",
         "image": "[concat(variables('dtHost'),'/linux/activegate:latest')]",
         "networkProfileName": "[concat(parameters('forwarderName'),'networkProfile')]",
@@ -305,7 +305,7 @@
                     "virtualNetworkRules": "[if(parameters('deployActiveGateContainer'), json(concat('[{ \"id\": \"', variables('functionSubnetId'), '\" }]')), json('null'))]",
                     "defaultAction": "Allow"
                 },
-                "supportsHttpsTrafficOnly": true,
+                "supportsTrafficOnly": true,
                 "allowBlobPublicAccess": false,
                 "encryption": {
                     "services": {
@@ -409,7 +409,7 @@
                         },
                         {
                             "name": "DYNATRACE_URL",
-                            "value": "[if(parameters('deployActiveGateContainer'), concat('https://172.0.0.4:9999/e/', variables('registryUser')), parameters('targetUrl'))]"
+                            "value": "[if(parameters('deployActiveGateContainer'), concat('://172.0.0.4:9999/e/', variables('registryUser')), parameters('targetUrl'))]"
                         },
                         {
                             "name": "DYNATRACE_ACCESS_KEY",
@@ -425,7 +425,7 @@
                         },
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=;AccountName=', variables('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value)]"
                         },
                         {
                             "name": "REQUIRE_VALID_CERTIFICATE",
@@ -473,7 +473,7 @@
                 "hostNamesDisabled": false,
                 "containerSize": 1536,
                 "dailyMemoryTimeQuota": 0,
-                "httpsOnly": false,
+                "httpsOnly": true,
                 "redundancyMode": "None"
             },
             "resources": [
